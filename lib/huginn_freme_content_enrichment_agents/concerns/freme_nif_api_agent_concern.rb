@@ -1,4 +1,4 @@
-module NifApiAgentConcern
+module FremeNifApiAgentConcern
   extend ActiveSupport::Concern
 
   included do

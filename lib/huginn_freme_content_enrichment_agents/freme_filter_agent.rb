@@ -2,7 +2,7 @@ module Agents
   class FremeFilterAgent < Agent
     include FormConfigurable
     include WebRequestConcern
-    include NifApiAgentConcern
+    include FremeNifApiAgentConcern
 
     default_schedule 'never'
 

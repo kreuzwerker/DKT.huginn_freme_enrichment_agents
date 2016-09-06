@@ -10,7 +10,7 @@ describe Agents::FremeExploreAgent do
   end
 
   it_behaves_like WebRequestConcern
-  it_behaves_like NifApiAgentConcern
+  it_behaves_like FremeNifApiAgentConcern
   it_behaves_like FremeFilterable
 
   describe "validating" do
