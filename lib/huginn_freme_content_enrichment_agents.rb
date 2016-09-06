@@ -1,0 +1,13 @@
+require 'huginn_agent'
+
+HuginnAgent.load 'huginn_freme_content_enrichment_agents/concerns/nif_api_agent_concern'
+HuginnAgent.load 'huginn_freme_content_enrichment_agents/concerns/freme_filterable'
+HuginnAgent.register 'huginn_freme_content_enrichment_agents/freme_explore_agent'
+HuginnAgent.register 'huginn_freme_content_enrichment_agents/freme_filter_agent'
+HuginnAgent.register 'huginn_freme_content_enrichment_agents/freme_link_agent'
+HuginnAgent.register 'huginn_freme_content_enrichment_agents/freme_ner_agent'
+HuginnAgent.register 'huginn_freme_content_enrichment_agents/freme_nif_converter_agent'
+HuginnAgent.register 'huginn_freme_content_enrichment_agents/freme_pipeline_agent'
+HuginnAgent.register 'huginn_freme_content_enrichment_agents/freme_spotlight_agent'
+HuginnAgent.register 'huginn_freme_content_enrichment_agents/freme_terminology_agent'
+HuginnAgent.register 'huginn_freme_content_enrichment_agents/freme_translation_agent'
