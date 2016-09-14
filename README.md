@@ -1,4 +1,4 @@
-# FremeContentEnrichmentAgents [![Build Status](https://travis-ci.org/kreuzwerker/DKT.huginn_freme_content_enrichment_agents.svg?branch=master)](https://travis-ci.org/kreuzwerker/DKT.huginn_freme_content_enrichment_agents)
+# FremeContentEnrichmentAgents [![Build Status](https://travis-ci.org/kreuzwerker/DKT.huginn_freme_enrichment_agents.svg?branch=master)](https://travis-ci.org/kreuzwerker/DKT.huginn_freme_enrichment_agents)
 
 This gem contains Huginn Agents to consume the [FREME](http://api.freme-project.eu/doc/current/home.html) natural language processing APIs. The Agent names are prefixed with `FREME`, look at the Agent description in Huginn for usage information.
 
@@ -7,9 +7,9 @@ This gem contains Huginn Agents to consume the [FREME](http://api.freme-project.
 Add this string to your Huginn's .env `ADDITIONAL_GEMS` configuration:
 
 ```ruby
-huginn_freme_content_enrichment_agents(github: kreuzwerker/DKT.huginn_freme_content_enrichment_agents)
+huginn_freme_enrichment_agents(github: kreuzwerker/DKT.huginn_freme_enrichment_agents)
 # when only using this agent gem it should look like hits:
-ADDITIONAL_GEMS=huginn_freme_content_enrichment_agents(github: kreuzwerker/DKT.huginn_freme_content_enrichment_agents)
+ADDITIONAL_GEMS=huginn_freme_enrichment_agents(github: kreuzwerker/DKT.huginn_freme_enrichment_agents)
 ```
 
 And then execute:
@@ -32,7 +32,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-1. Fork it ( https://github.com/kreuzwerker/DKT.huginn_freme_content_enrichment_agents/fork )
+1. Fork it ( https://github.com/kreuzwerker/DKT.huginn_freme_enrichment_agents/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

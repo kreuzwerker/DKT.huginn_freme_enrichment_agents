@@ -3,7 +3,7 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name          = "huginn_freme_content_enrichment_agents"
+  spec.name          = "huginn_freme_enrichment_agents"
   spec.version       = '0.1'
   spec.authors       = ["Dominik Sander"]
   spec.email         = ["git@dsander.de"]
@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Agents for doing natural language processing using the FREME APIs.}
   spec.description   = %q{Write a longer description or delete this line.}
 
-  spec.homepage      = "https://github.com/kreuzwerker/huginn_freme_content_enrichment_agents"
+  spec.homepage      = "https://github.com/kreuzwerker/DKT.huginn_freme_enrichment_agents"
 
   spec.license       = "Apache License 2.0"
 
