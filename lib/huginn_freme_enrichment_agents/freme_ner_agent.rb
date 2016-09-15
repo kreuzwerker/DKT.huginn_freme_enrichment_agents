@@ -36,6 +36,8 @@ module Agents
 
       `types` Takes as input list of one or more entity types separated by a comma. The types are URLs of ontology classes and they should be encoded. The result is a list of extracted entities with these types. More information about the types parameter in [FREME NER knowledge-base](http://api.freme-project.eu/doc/current/knowledge-base/freme-for-api-users/freme-ner.html).
 
+      `linkingMethod` is a configurable parameter that can be used to choose preferred entity linking method. Depending on dataset and the content you want to process, one linking might provide better results than other. While one approach could aim at higher recall, the other might target higher precision. So far, you can choose between following linking approaches:
+
       `numLinks` Using the numLinks parameter one can specify the maximum number of links to be assigned to an entity. By default only one link is returned. The maximum possible number for this parameter is 5.
 
       #{filterable_description}
@@ -64,6 +66,7 @@ module Agents
     form_configurable :mode, type: :array, values: ['all', 'spot', 'spot,classify', 'spot,link', 'spot,link,classify', 'link']
     form_configurable :domain
     form_configurable :types
+    form_configurable :linkingMethod, type: :array, values: ['MFS', 'SurfaceFormSimilarity1']
     form_configurable :numLinks
     filterable_field
 
@@ -87,7 +90,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat', 'prefix', 'language', 'dataset', 'mode', 'domain', 'types', 'numLinks'], URI.join(mo['base_url'], 'e-entity/freme-ner/documents'))
+        nif_request!(mo, ['outformat', 'prefix', 'language', 'dataset', 'mode', 'domain', 'types', 'numLinks', 'linkingMethod'], URI.join(mo['base_url'], 'e-entity/freme-ner/documents'))
       end
     end
   end
