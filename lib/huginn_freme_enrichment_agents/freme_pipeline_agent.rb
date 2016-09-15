@@ -9,15 +9,15 @@ module Agents
     description <<-MD
       The `FremePipelineAgent` allows to send a pipeline request to the FREME API.
 
-      The Agent accepts all configuration options of the `/pipelining/chain` endpoint as of version `0.6`, have a look at the [offical documentation](http://api.freme-project.eu/doc/0.6/api-doc/full.html#!/pipelining/post_pipelining_chain) if you need additional information.
+      The Agent accepts all configuration options of the `/pipelining/chain` endpoint as of September 2016, have a look at the [offical documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/pipelining/post_pipelining_chain) if you need additional information.
 
       All Agent configuration options are interpolated using [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) in the context of the received event.
 
-      `base_url` allows to customize the API server when hosting the FREME services elswhere, make sure to include the API version.
+      `base_url` allows to customize the API server when hosting the FREME services elswhere.
 
       #{freme_auth_token_description}
 
-      `template` When selecting a [pipeline-template](http://api.freme-project.eu/doc/0.6/api-doc/full.html#!/pipelining/get_pipelining_templates), `body` will be used as the input for the pipeline chain.
+      `template` When selecting a [pipeline-template](http://api.freme-project.eu/doc/current/api-doc/full.html#!/pipelining/get_pipelining_templates), `body` will be used as the input for the pipeline chain.
 
       `body_format` specify the content-type of the data in `body` (only used when a template is selected)
 
@@ -28,7 +28,7 @@ module Agents
 
     def default_options
       {
-        'base_url' => 'http://api.freme-project.eu/0.6/',
+        'base_url' => 'http://api.freme-project.eu/current/',
         'body' => '{{ body }}',
         'stats' => 'false',
       }

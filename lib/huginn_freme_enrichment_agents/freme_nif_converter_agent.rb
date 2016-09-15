@@ -7,13 +7,13 @@ module Agents
     default_schedule 'never'
 
     description <<-MD
-      The `FremeNifConcerterAgent` allows to convert plain text, a document in any format supported by [e-Internalisation](http://api.freme-project.eu/doc/0.6/knowledge-base/freme-for-api-users/eInternationalisation.html) or in the RDF formats supported by FREME into a NIF document with the RDF serialisation format specified by the accept header.
+      The `FremeNifConcerterAgent` allows to convert plain text, a document in any format supported by [e-Internalisation](http://api.freme-project.eu/doc/current/knowledge-base/freme-for-api-users/eInternationalisation.html) or in the RDF formats supported by FREME into a NIF document with the RDF serialisation format specified by the accept header.
 
-      The Agent accepts all configuration options of the `/toolbox/nif-converter` endpoint as of version `0.6`, have a look at the [offical documentation](http://api.freme-project.eu/doc/0.6/api-doc/full.html#!/Toolbox/post_toolbox_nif_converter) if you need additional information.
+      The Agent accepts all configuration options of the `/toolbox/nif-converter` endpoint as of September 2016, have a look at the [offical documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/Toolbox/post_toolbox_nif_converter) if you need additional information.
 
       All Agent configuration options are interpolated using [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) in the context of the received event.
 
-      `base_url` allows to customize the API server when hosting the FREME services elswhere, make sure to include the API version.
+      `base_url` allows to customize the API server when hosting the FREME services elswhere.
 
       `outformat` requested RDF serialization format of the output
 
@@ -24,7 +24,7 @@ module Agents
 
     def default_options
       {
-        'base_url' => 'http://api.freme-project.eu/0.6/',
+        'base_url' => 'http://api.freme-project.eu/current/',
         'outformat' => 'text/turtle',
         'body_format' => 'text/plain',
         'body' => '{{ body }}',

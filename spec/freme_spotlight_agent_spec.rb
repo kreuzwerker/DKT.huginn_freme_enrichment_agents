@@ -47,7 +47,7 @@ describe Agents::FremeSpotlightAgent do
     end
 
     it "creates an event after a successful request" do
-      stub_request(:post, "http://api.freme-project.eu/0.6/e-entity/dbpedia-spotlight/documents?confidence=0.3&language=en&numLinks=1&outformat=turtle").
+      stub_request(:post, "http://api.freme-project.eu/current/e-entity/dbpedia-spotlight/documents?confidence=0.3&language=en&numLinks=1&outformat=turtle").
         with(:headers => {'X-Auth-Token'=> nil, 'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'text/plain', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
         to_return(:status => 200, :body => "DATA", :headers => {})
       expect { @checker.receive([@event]) }.to change(Event, :count).by(1)

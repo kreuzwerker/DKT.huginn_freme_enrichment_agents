@@ -34,7 +34,7 @@ describe Agents::FremePipelineAgent do
   end
 
   it "#complete_template_id returns a list of available templates" do
-    stub_request(:get, "http://api.freme-project.eu/0.6/pipelining/templates").
+    stub_request(:get, "http://api.freme-project.eu/current/pipelining/templates").
       with(:headers => {'X-Auth-Token'=> nil, 'Accept'=>'application/json', 'Accept-Encoding'=>'gzip,deflate', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
       to_return(:status => 200, :body => '[{"id": 34,"description": "First e-Entity, then e-Translate"}]', :headers => {})
     expect(@checker.complete_template_id).to eq([{text: "First e-Entity, then e-Translate", id: 34}])
@@ -46,7 +46,7 @@ describe Agents::FremePipelineAgent do
     end
 
     it "creates an event after a successfull request" do
-      stub_request(:post, "http://api.freme-project.eu/0.6/pipelining/chain?stats=false").
+      stub_request(:post, "http://api.freme-project.eu/current/pipelining/chain?stats=false").
         with(:body => "Hello from Huginn",
              :headers => {'X-Auth-Token'=> nil, 'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'application/json', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
         to_return(:status => 200, :body => "DATA", :headers => {})
@@ -56,7 +56,7 @@ describe Agents::FremePipelineAgent do
     end
 
     it "uses the configured pipeline template" do
-      stub_request(:post, "http://api.freme-project.eu/0.6/pipelining/chain/34?stats=false").
+      stub_request(:post, "http://api.freme-project.eu/current/pipelining/chain/34?stats=false").
         with(:body => "Hello from Huginn",
              :headers => {'X-Auth-Token'=> nil, 'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'text/plain', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
         to_return(:status => 200, :body => "DATA", :headers => {})

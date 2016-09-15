@@ -10,11 +10,11 @@ module Agents
     description <<-MD
       The `FremeTranslationAgent` translates text using Tilde Translation service.
 
-      The Agent accepts all configuration options of the `/e-translation/tilde` endpoint as of version `0.6`, have a look at the [offical documentation](http://api.freme-project.eu/doc/0.6/api-doc/full.html#!/e-Terminology/e_terminology) if you need additional information
+      The Agent accepts all configuration options of the `/e-translation/tilde` endpoint as of September 2016, have a look at the [offical documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/e-Terminology/e_terminology) if you need additional information
 
       All Agent configuration options are interpolated using [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) in the context of the received event.
 
-      `base_url` allows to customize the API server when hosting the FREME services elswhere, make sure to include the API version.
+      `base_url` allows to customize the API server when hosting the FREME services elswhere.
 
       #{freme_auth_token_description}
 
@@ -39,7 +39,7 @@ module Agents
 
     def default_options
       {
-        'base_url' => 'http://api.freme-project.eu/0.6/',
+        'base_url' => 'http://api.freme-project.eu/current/',
         'body' => '{{ data }}',
         'body_format' => 'text/plain',
         'outformat' => 'turtle',

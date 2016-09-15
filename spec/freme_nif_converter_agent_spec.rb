@@ -44,7 +44,7 @@ describe Agents::FremeNifConverterAgent do
     end
 
     it "creates an event after a successfull request" do
-      stub_request(:post, "http://api.freme-project.eu/0.6/toolbox/nif-converter?outformat=text/turtle").
+      stub_request(:post, "http://api.freme-project.eu/current/toolbox/nif-converter?outformat=text/turtle").
         with(:body => "Hello from Huginn",
              :headers => {'X-Auth-Token'=> nil, 'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'text/plain', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
         to_return(:status => 200, :body => "DATA", :headers => {})
