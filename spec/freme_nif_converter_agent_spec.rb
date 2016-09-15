@@ -52,5 +52,20 @@ describe Agents::FremeNifConverterAgent do
       event = Event.last
       expect(event.payload['body']).to eq('DATA')
     end
+
+    it 'handles an incoming file pointer' do
+      stub_request(:post, "http://api.freme-project.eu/current/toolbox/nif-converter").
+        with(:body => "-------------RubyMultipartPost\r\nContent-Disposition: form-data; name=\"inputFile\"; filename=\"local.path\"\r\nContent-Length: 8\r\nContent-Type: \r\nContent-Transfer-Encoding: binary\r\n\r\ntestdata\r\n-------------RubyMultipartPost\r\nContent-Disposition: form-data; name=\"informat\"\r\n\r\nTIKAFile\r\n-------------RubyMultipartPost\r\nContent-Disposition: form-data; name=\"outformat\"\r\n\r\ntext/turtle\r\n-------------RubyMultipartPost--\r\n\r\n",
+             :headers => {'Accept-Encoding'=>'gzip,deflate', 'Content-Length'=>'413', 'Content-Type'=>'multipart/form-data; boundary=-----------RubyMultipartPost', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
+        to_return(:status => 200, :body => "DATA", :headers => {})
+
+      event = Event.new(payload: {file_pointer: {agent_id: 111, file: 'test'}})
+      io_mock = mock()
+      mock(@checker).get_io(event) { StringIO.new("testdata") }
+
+      expect { @checker.receive([event]) }.to change(Event, :count).by(1)
+      event = Event.last
+      expect(event.payload['body']).to eq('DATA')
+    end
   end
 end
