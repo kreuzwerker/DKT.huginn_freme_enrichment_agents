@@ -24,6 +24,8 @@ module Agents
       `body` use [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) templating to specify the data to be send to the API.
 
       `stats` If true, adds timing statistics to the response: total duration of the pipeline and duration of each service called in the pipeline (in milliseconds).
+
+      `useI18n` If `false`, enforces to not use [e-Internalization](https://freme-project.github.io//knowledge-base/freme-for-api-users/eInternationalisation.html), even if Content-Type header is one of the possible e-Internalization formats. For any othe value, e-Internalization will be used, if possible.
     MD
 
     def default_options
@@ -31,6 +33,7 @@ module Agents
         'base_url' => 'http://api.freme-project.eu/current/',
         'body' => '{{ body }}',
         'stats' => 'false',
+        'useI18n' => 'true'
       }
     end
 
@@ -40,6 +43,7 @@ module Agents
     form_configurable :body_format, type: :array, values: ['text/plain', 'text/n3', 'text/turtle', 'application/json', 'application/ld+json', 'application/n-triples', 'application/rdf+xml']
     form_configurable :body, type: :text, ace: true
     form_configurable :stats, type: :boolean
+    form_configurable :useI18n, type: :boolean
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -59,10 +63,10 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
         if mo['template_id'].present?
-          nif_request!(mo, ['stats'], URI.join(mo['base_url'], "pipelining/chain/#{mo['template_id']}"))
+          nif_request!(mo, ['stats', 'useI18n'], URI.join(mo['base_url'], "pipelining/chain/#{mo['template_id']}"))
         else
           mo['body_format'] = 'application/json'
-          nif_request!(mo, ['stats'], URI.join(mo['base_url'], 'pipelining/chain'))
+          nif_request!(mo, ['stats', 'useI18n'], URI.join(mo['base_url'], 'pipelining/chain'))
         end
       end
     end
