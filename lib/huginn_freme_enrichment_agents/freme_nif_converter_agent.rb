@@ -65,7 +65,7 @@ module Agents
 
           response = faraday.post(URI.join(mo['base_url'], 'toolbox/nif-converter'), mo.slice('inputFile', 'informat','outformat'), headers)
 
-          create_event(response)
+          create_nif_event(response)
         else
           nif_request!(mo, ['outformat'], URI.join(mo['base_url'], 'toolbox/nif-converter'))
         end
