@@ -74,7 +74,7 @@ describe Agents::FremeFilterAgent do
     end
 
     it "creates an event after a successful request" do
-      stub_request(:post, "http://api.freme-project.eu/current/toolbox/convert/documents/testfilter?outformat=turtle").
+      stub_request(:post, "http://api.freme-project.eu/current/toolbox/convert/documents/testfilter?outformat=text/turtle").
         with(:headers => {'X-Auth-Token'=> nil, 'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'text/turtle', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
         to_return(:status => 200, :body => "DATA", :headers => {})
       expect { @checker.receive([@event]) }.to change(Event, :count).by(1)

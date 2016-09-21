@@ -32,7 +32,7 @@ module Agents
     def default_options
       {
         'base_url' => 'http://api.freme-project.eu/current/',
-        'outformat' => 'turtle',
+        'outformat' => 'text/turtle',
         'endpoint' => '',
         'resource' => '',
         'endpoint_type' => 'sparql'
@@ -41,7 +41,7 @@ module Agents
 
     form_configurable :base_url
     form_configurable :auth_token
-    form_configurable :outformat, type: :array, values: ['json-ld', 'turtle', 'n3', 'n-triples', 'rdf-xml', 'csv']
+    form_configurable :outformat, type: :array, values: ['application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml']
     form_configurable :resource
     form_configurable :endpoint
     form_configurable :endpoint_type, type: :array, values: ['sparql', 'ldf']

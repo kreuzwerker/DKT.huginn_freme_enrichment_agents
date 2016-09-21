@@ -36,7 +36,7 @@ module Agents
         'base_url' => 'http://api.freme-project.eu/current/',
         'body' => '{{ body }}',
         'body_format' => 'text/turtle',
-        'outformat' => 'turtle',
+        'outformat' => 'text/turtle',
         'templateid' => '',
       }
     end
@@ -45,7 +45,7 @@ module Agents
     form_configurable :auth_token
     form_configurable :body
     form_configurable :body_format, type: :array, values: ['text/n3', 'text/turtle', 'application/ld+json', 'application/n-triples', 'application/rdf+xml']
-    form_configurable :outformat, type: :array, values: ['turtle', 'json-ld', 'n3', 'n-triples', 'rdf-xml', 'text', 'rdf-xml', 'csv']
+    form_configurable :outformat, type: :array, values: ['application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml']
     form_configurable :templateid, roles: :completable
     filterable_field
 

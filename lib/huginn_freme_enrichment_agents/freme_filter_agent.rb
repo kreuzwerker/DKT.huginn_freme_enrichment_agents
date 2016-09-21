@@ -9,7 +9,7 @@ module Agents
     description <<-MD
       The `FremeFilterAgent` allows to execute a certain filter against a RDF graph sent as post body or as value of the NIF input parameter. For more information and a list of available filters, see the [Simply FREME output using SPARQL filters](http://api.freme-project.eu/doc/current/knowledge-base/freme-for-api-users/filtering.html) article.
 
-      The Agent accepts all configuration options of the `/toolbox/convert/documents` endpoint as of September 2016, have a look at the [offical documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/Toolbox/post_toolbox_convert_documents_name) if you need additional information.
+      The Agent accepts all configuration options of the `/toolbox/convert/documents` endpoint as of September 2016, have a look at the [offical documentation](https://freme-project.github.io/api-doc/full.html#!/Toolbox%2FPostprocessing-Filter/post_toolbox_convert_documents_name) if you need additional information.
 
       All Agent configuration options are interpolated using [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) in the context of the received event.
 
@@ -31,7 +31,7 @@ module Agents
         'base_url' => 'http://api.freme-project.eu/current/',
         'body' => '{{ body }}',
         'body_format' => 'text/turtle',
-        'outformat' => 'turtle',
+        'outformat' => 'text/turtle',
         'name' => '',
       }
     end
@@ -40,7 +40,7 @@ module Agents
     form_configurable :auth_token
     form_configurable :body
     form_configurable :body_format, type: :array, values: ['text/n3', 'text/turtle', 'application/ld+json', 'application/n-triples', 'application/rdf+xml']
-    form_configurable :outformat, type: :array, values: ['csv', 'xml', 'json', 'json-ld', 'turtle', 'n3', 'n-triples', 'rdf-xml']
+    form_configurable :outformat, type: :array, values: ['text/comma-separated-values', 'text/xml', 'application/json', 'application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml']
     form_configurable :name, roles: :completable
 
     def validate_options

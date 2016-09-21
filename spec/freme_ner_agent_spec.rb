@@ -71,7 +71,7 @@ describe Agents::FremeNerAgent do
     end
 
     it "creates an event after a successful request" do
-      stub_request(:post, "http://api.freme-project.eu/current/e-entity/freme-ner/documents?dataset=testset&language=en&mode=all&numLinks=1&outformat=turtle").
+      stub_request(:post, "http://api.freme-project.eu/current/e-entity/freme-ner/documents?dataset=testset&language=en&mode=all&numLinks=1&outformat=text/turtle").
          with(:body => "Hello from Huginn",
               :headers => {'X-Auth-Token'=> nil, 'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'text/plain', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
          to_return(:status => 200, :body => "DATA", :headers => {})
@@ -83,7 +83,7 @@ describe Agents::FremeNerAgent do
     it "set optional parameters when specified" do
       @checker.options['prefix'] = 'http://huginn.io'
       @checker.options['linkingMethod'] = 'SurfaceFormSimilarity1'
-      stub_request(:post, "http://api.freme-project.eu/current/e-entity/freme-ner/documents?dataset=testset&language=en&linkingMethod=SurfaceFormSimilarity1&mode=all&numLinks=1&outformat=turtle&prefix=http://huginn.io").
+      stub_request(:post, "http://api.freme-project.eu/current/e-entity/freme-ner/documents?dataset=testset&language=en&linkingMethod=SurfaceFormSimilarity1&mode=all&numLinks=1&outformat=text/turtle&prefix=http://huginn.io").
          with(:body => "Hello from Huginn",
               :headers => {'X-Auth-Token'=> nil, 'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'text/plain', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
          to_return(:status => 200, :body => "DATA", :headers => {})

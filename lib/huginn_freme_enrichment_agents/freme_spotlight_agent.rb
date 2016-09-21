@@ -10,7 +10,7 @@ module Agents
     description <<-MD
       The `FremeFilterAgent`  enriches text content with entities gathered from various datasets by the DBPedia-Spotlight Engine.
 
-      The Agent accepts all configuration options of the `/e-entity/dbpedia-spotlight/documents` endpoint as of September 2016, have a look at the [offical documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/e-Entity/executeSpotlightNel) if you need additional information.
+      The Agent accepts all configuration options of the `/e-entity/dbpedia-spotlight/documents` endpoint as of September 2016, have a look at the [offical documentation](https://freme-project.github.io//api-doc/full.html#!/e-Entity/executeSpotlightNer) if you need additional information.
 
       All Agent configuration options are interpolated using [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) in the context of the received event.
 
@@ -40,7 +40,7 @@ module Agents
         'base_url' => 'http://api.freme-project.eu/current/',
         'body' => '{{ body }}',
         'body_format' => 'text/plain',
-        'outformat' => 'turtle',
+        'outformat' => 'text/turtle',
         'prefix' => '',
         'language' => 'en',
         'numLinks' => '1',
@@ -52,7 +52,7 @@ module Agents
     form_configurable :auth_token
     form_configurable :body
     form_configurable :body_format, type: :array, values: ['text/plain', 'text/xml', 'text/html', 'text/n3', 'text/turtle', 'application/ld+json', 'application/n-triples', 'application/rdf+xml', 'application/x-xliff+xml', 'application/x-openoffice']
-    form_configurable :outformat, type: :array, values: ['turtle', 'json-ld', 'n3', 'n-triples', 'rdf-xml', 'text/html', 'text/xml', 'application/x-xliff+xml', 'application/x-openoffice', 'csv']
+    form_configurable :outformat, type: :array, values: ['text/turtle', 'application/ld+json', 'text/n3', 'application/n-triples', 'application/rdf+xml', 'text/html', 'text/xml', 'application/x-xliff+xml', 'application/x-openoffice']
     form_configurable :prefix
     form_configurable :language, type: :array, values: ['en']
     form_configurable :numLinks
