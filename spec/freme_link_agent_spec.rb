@@ -43,7 +43,7 @@ describe Agents::FremeLinkAgent do
     before(:each) do
       faraday_mock = mock()
       @response_mock = mock()
-      mock(faraday_mock).run_request(:get, URI.parse('http://api.freme-project.eu/0.6/e-link/templates'), nil, { 'X-Auth-Token'=> nil, 'Accept' => 'application/json'}) { @response_mock }
+      mock(faraday_mock).run_request(:get, URI.parse('http://api.freme-project.eu/current/e-link/templates'), nil, { 'X-Auth-Token'=> nil, 'Accept' => 'application/json'}) { @response_mock }
       mock(@checker).faraday { faraday_mock }
     end
     it "returns the available datasets" do
@@ -104,7 +104,7 @@ describe Agents::FremeLinkAgent do
     end
 
     it "creates an event after a successful request" do
-      stub_request(:post, "http://api.freme-project.eu/0.6/e-link/documents?outformat=turtle&templateid=1245").
+      stub_request(:post, "http://api.freme-project.eu/current/e-link/documents?outformat=text/turtle&templateid=1245").
          with(:headers => {'X-Auth-Token'=> nil, 'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'text/turtle', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
          to_return(:status => 200, :body => "DATA", :headers => {})
       expect { @checker.receive([@event]) }.to change(Event, :count).by(1)

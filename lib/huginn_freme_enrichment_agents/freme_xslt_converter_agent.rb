@@ -1,5 +1,5 @@
 module Agents
-  class FremeFilterAgent < Agent
+  class FremeXsltConverterAgent < Agent
     include FormConfigurable
     include WebRequestConcern
     include FremeNifApiAgentConcern
@@ -7,9 +7,9 @@ module Agents
     default_schedule 'never'
 
     description <<-MD
-      The `FremeFilterAgent` allows to execute a certain filter against a RDF graph sent as post body or as value of the NIF input parameter. For more information and a list of available filters, see the [Simply FREME output using SPARQL filters](http://api.freme-project.eu/doc/current/knowledge-base/freme-for-api-users/filtering.html) article.
+      The `FremeXsltConverterAgent` allows to transform a XML or HTML document with a certain XSLT converter using the FREME API.
 
-      The Agent accepts all configuration options of the `/toolbox/convert/documents` endpoint as of September 2016, have a look at the [offical documentation](https://freme-project.github.io/api-doc/full.html#!/Toolbox%2FPostprocessing-Filter/post_toolbox_convert_documents_name) if you need additional information.
+      The Agent accepts all configuration options of the `/toolbox/xslt-converter/documents` endpoint as of September 2016, have a look at the [offical documentation](https://freme-project.github.io/api-doc/full.html#!/Toolbox%2FXSLT-Converter/post_toolbox_xslt_converter_documents_name) abd the [Input transformation with XSLT](https://freme-project.github.io/knowledge-base/freme-for-api-users/xslt-transformation.html) article if you need additional information.
 
       All Agent configuration options are interpolated using [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) in the context of the received event.
 
@@ -21,27 +21,27 @@ module Agents
 
       `body_format` specify the content-type of the data in `body`
 
-      `outformat` requested RDF serialization format of the output
+      `outformat` requested format of the output
 
-      `name` name of filter to execute against, [the official documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/Toolbox/get_toolbox_convert_manage) has a list of all available filters.
+      `name` name of filter to execute against, [the official documentation](https://freme-project.github.io/api-doc/full.html#!/Toolbox%2FXSLT-Converter/get_toolbox_xslt_converter_manage) has a list of all available filters.
     MD
 
     def default_options
       {
         'base_url' => 'http://api.freme-project.eu/current/',
         'body' => '{{ body }}',
-        'body_format' => 'text/turtle',
-        'outformat' => 'text/turtle',
+        'body_format' => 'text/html',
+        'outformat' => 'text/html',
         'name' => '',
       }
     end
 
     form_configurable :base_url
     form_configurable :auth_token
-    form_configurable :body
-    form_configurable :body_format, type: :array, values: ['text/n3', 'text/turtle', 'application/ld+json', 'application/n-triples', 'application/rdf+xml']
-    form_configurable :outformat, type: :array, values: ['text/comma-separated-values', 'text/xml', 'application/json', 'application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml']
+    form_configurable :body_format, type: :array, values: ['text/xml', 'text/html']
+    form_configurable :outformat, type: :array, values: ['text/xml', 'text/html']
     form_configurable :name, roles: :completable
+    form_configurable :body, type: :text
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -52,7 +52,7 @@ module Agents
     end
 
     def complete_name
-      response = faraday.run_request(:get, URI.join(interpolated['base_url'], 'toolbox/convert/manage'), nil, auth_header.merge({ 'Accept' => 'application/json'}))
+      response = faraday.run_request(:get, URI.join(interpolated['base_url'], 'toolbox/xslt-converter/manage'), nil, auth_header.merge({ 'Accept' => 'application/json'}))
       return [] if response.status != 200
 
       JSON.parse(response.body).map { |filter| { text: "#{filter['name']}", id: filter['name'], description: filter['description'] } }
@@ -62,7 +62,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat'], URI.join(mo['base_url'], 'toolbox/convert/documents/', mo['name']))
+        nif_request!(mo, ['outformat'], URI.join(mo['base_url'], 'toolbox/xslt-converter/documents/', mo['name']))
       end
     end
   end

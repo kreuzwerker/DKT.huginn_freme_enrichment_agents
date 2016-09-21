@@ -1,10 +1,10 @@
 require 'rails_helper'
 require 'huginn_agent/spec_helper'
 
-describe Agents::FremeFilterAgent do
+describe Agents::FremeXsltConverterAgent do
   before(:each) do
-    @valid_options = Agents::FremeFilterAgent.new.default_options.merge('name' => 'testfilter')
-    @checker = Agents::FremeFilterAgent.new(:name => "somename", :options => @valid_options)
+    @valid_options = Agents::FremeXsltConverterAgent.new.default_options.merge('name' => 'testfilter')
+    @checker = Agents::FremeXsltConverterAgent.new(:name => "somename", :options => @valid_options)
     @checker.user = users(:jane)
     @checker.save!
   end
@@ -42,7 +42,7 @@ describe Agents::FremeFilterAgent do
     before(:each) do
       faraday_mock = mock()
       @response_mock = mock()
-      mock(faraday_mock).run_request(:get, URI.parse('http://api.freme-project.eu/current/toolbox/convert/manage'), nil, { 'X-Auth-Token'=> nil, 'Accept' => 'application/json'}) { @response_mock }
+      mock(faraday_mock).run_request(:get, URI.parse('http://api.freme-project.eu/current/toolbox/xslt-converter/manage'), nil, { 'X-Auth-Token'=> nil, 'Accept' => 'application/json'}) { @response_mock }
       mock(@checker).faraday { faraday_mock }
     end
     it "returns the available filters" do
@@ -61,26 +61,24 @@ describe Agents::FremeFilterAgent do
     before(:each) do
       @event = Event.new(payload: {data:
          <<-END
-          @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
-          @prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
-
-          <http://freme-project.eu/#char=0,17>
-                  a               nif:RFC5147String , nif:Context , nif:String ;
-                  nif:beginIndex  "0"^^xsd:nonNegativeInteger ;
-                  nif:endIndex    "17"^^xsd:nonNegativeInteger ;
-                  nif:isString    "Hello from Huginn" .
+          <?xml version="1.0"?>
+          <note>
+              <to>Tove</to>
+              <from>Jani</from>
+              <heading>Reminder</heading>
+              <body>Dont forget me this weekend!</body>
+          </note>
          END
       })
     end
 
     it "creates an event after a successful request" do
-      stub_request(:post, "http://api.freme-project.eu/current/toolbox/convert/documents/testfilter?outformat=text/turtle").
-        with(:headers => {'X-Auth-Token'=> nil, 'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'text/turtle', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
-        to_return(:status => 200, :body => "DATA", :headers => {})
+       stub_request(:post, "http://api.freme-project.eu/current/toolbox/xslt-converter/documents/testfilter?outformat=text/html").
+         with(:headers => {'Accept-Encoding'=>'gzip,deflate', 'Content-Type'=>'text/html', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn', 'X-Auth-Token'=>''}).
+         to_return(:status => 200, :body => "DATA", :headers => {})
       expect { @checker.receive([@event]) }.to change(Event, :count).by(1)
       event = Event.last
       expect(event.payload['body']).to eq('DATA')
     end
-
   end
 end

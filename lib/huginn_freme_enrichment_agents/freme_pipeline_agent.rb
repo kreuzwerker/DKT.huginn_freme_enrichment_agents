@@ -9,28 +9,31 @@ module Agents
     description <<-MD
       The `FremePipelineAgent` allows to send a pipeline request to the FREME API.
 
-      The Agent accepts all configuration options of the `/pipelining/chain` endpoint as of version `0.6`, have a look at the [offical documentation](http://api.freme-project.eu/doc/0.6/api-doc/full.html#!/pipelining/post_pipelining_chain) if you need additional information.
+      The Agent accepts all configuration options of the `/pipelining/chain` endpoint as of September 2016, have a look at the [offical documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/pipelining/post_pipelining_chain) if you need additional information.
 
       All Agent configuration options are interpolated using [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) in the context of the received event.
 
-      `base_url` allows to customize the API server when hosting the FREME services elswhere, make sure to include the API version.
+      `base_url` allows to customize the API server when hosting the FREME services elswhere.
 
       #{freme_auth_token_description}
 
-      `template` When selecting a [pipeline-template](http://api.freme-project.eu/doc/0.6/api-doc/full.html#!/pipelining/get_pipelining_templates), `body` will be used as the input for the pipeline chain.
+      `template` When selecting a [pipeline-template](http://api.freme-project.eu/doc/current/api-doc/full.html#!/pipelining/get_pipelining_templates), `body` will be used as the input for the pipeline chain.
 
       `body_format` specify the content-type of the data in `body` (only used when a template is selected)
 
       `body` use [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) templating to specify the data to be send to the API.
 
       `stats` If true, adds timing statistics to the response: total duration of the pipeline and duration of each service called in the pipeline (in milliseconds).
+
+      `useI18n` If `false`, enforces to not use [e-Internalization](https://freme-project.github.io//knowledge-base/freme-for-api-users/eInternationalisation.html), even if Content-Type header is one of the possible e-Internalization formats. For any othe value, e-Internalization will be used, if possible.
     MD
 
     def default_options
       {
-        'base_url' => 'http://api.freme-project.eu/0.6/',
+        'base_url' => 'http://api.freme-project.eu/current/',
         'body' => '{{ body }}',
         'stats' => 'false',
+        'useI18n' => 'true'
       }
     end
 
@@ -40,6 +43,7 @@ module Agents
     form_configurable :body_format, type: :array, values: ['text/plain', 'text/n3', 'text/turtle', 'application/json', 'application/ld+json', 'application/n-triples', 'application/rdf+xml']
     form_configurable :body, type: :text, ace: true
     form_configurable :stats, type: :boolean
+    form_configurable :useI18n, type: :boolean
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -59,10 +63,10 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
         if mo['template_id'].present?
-          nif_request!(mo, ['stats'], URI.join(mo['base_url'], "pipelining/chain/#{mo['template_id']}"))
+          nif_request!(mo, ['stats', 'useI18n'], URI.join(mo['base_url'], "pipelining/chain/#{mo['template_id']}"))
         else
           mo['body_format'] = 'application/json'
-          nif_request!(mo, ['stats'], URI.join(mo['base_url'], 'pipelining/chain'))
+          nif_request!(mo, ['stats', 'useI18n'], URI.join(mo['base_url'], 'pipelining/chain'))
         end
       end
     end

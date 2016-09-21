@@ -7,7 +7,7 @@ module FremeFilterable
     end
 
     def filterable_description
-      "`filter` allows to post-process the results using a pre-configured SPARQL filter. Check the [official documentation](http://api.freme-project.eu/doc/0.6/knowledge-base/freme-for-api-users/filtering.html) for details."
+      "`filter` allows to post-process the results using a pre-configured SPARQL filter. Check the [official documentation](http://api.freme-project.eu/doc/current/knowledge-base/freme-for-api-users/filtering.html) for details."
     end
 
     def filterable_outformat_description

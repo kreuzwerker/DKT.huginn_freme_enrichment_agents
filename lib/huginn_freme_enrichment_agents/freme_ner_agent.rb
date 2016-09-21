@@ -10,11 +10,11 @@ module Agents
     description <<-MD
       The `FremeNerAgent` (Freme Named Entity Recognition) enriches text content with entities gathered from various datasets by the DBPedia-Spotlight Engine. The service accepts plaintext or text sent as NIF document. The text of the nif:isString property (attached to the nif:Context document) will be used for processing.
 
-      The Agent accepts all configuration options of the `/e-entity/freme-ner/documents` endpoint as of version `0.6`, have a look at the [official documentation](http://api.freme-project.eu/doc/0.6/api-doc/full.html#!/e-Entity/executeFremeNel) if you need additional information
+      The Agent accepts all configuration options of the `/e-entity/freme-ner/documents` endpoint as of September 2016, have a look at the [official documentation](https://freme-project.github.io//api-doc/full.html#!/e-Entity/executeFremeNer) if you need additional information
 
       All Agent configuration options are interpolated using [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) in the context of the received event.
 
-      `base_url` allows to customize the API server when hosting the FREME services elsewhere, make sure to include the API version.
+      `base_url` allows to customize the API server when hosting the FREME services elsewhere.
 
       #{freme_auth_token_description}
 
@@ -32,9 +32,11 @@ module Agents
 
       `mode` This parameter allows to produce only partly results of named entity recognition. This can speed up computation time. Spotting and classification are relatively fast operations, whereas linking is a computationally expensive operation. When "link" is given as the parameter and the given "informat" or "Content-Type" is NIF, this service expects NIF data with entity mentions, i.e. anchorOf, beginIndex, endIndex etc. are given and it does only entity linking. When "link" is given as the parameter and the given "informat" or "Content-Type" is plain text, this service interprets the entire input as a single Entity and does entity linking for that specific entity. Note that "all" is equivalent to "spot,link,classify". The order of the modes are irrelevant, i.e. "spot,link,classify" is equivalent to "spot,classify,link".
 
-      `domain` Takes as input a domain ID, and it only returns entities from this domain. The domain IDs are from the [TaaS domain classification system](https://term.tilde.com/domains). For example, the sports domain is identified with the TaaS-2007 ID. Note that the IDs are case-sensitive. More information about the domain parameter in [FREME NER knowledge-base](http://api.freme-project.eu/doc/0.6/knowledge-base/freme-for-api-users/freme-ner.html).
+      `domain` Takes as input a domain ID, and it only returns entities from this domain. The domain IDs are from the [TaaS domain classification system](https://term.tilde.com/domains). For example, the sports domain is identified with the TaaS-2007 ID. Note that the IDs are case-sensitive. More information about the domain parameter in [FREME NER knowledge-base](http://api.freme-project.eu/doc/current/knowledge-base/freme-for-api-users/freme-ner.html).
 
-      `types` Takes as input list of one or more entity types separated by a comma. The types are URLs of ontology classes and they should be encoded. The result is a list of extracted entities with these types. More information about the types parameter in [FREME NER knowledge-base](http://api.freme-project.eu/doc/0.6/knowledge-base/freme-for-api-users/freme-ner.html).
+      `types` Takes as input list of one or more entity types separated by a comma. The types are URLs of ontology classes and they should be encoded. The result is a list of extracted entities with these types. More information about the types parameter in [FREME NER knowledge-base](http://api.freme-project.eu/doc/current/knowledge-base/freme-for-api-users/freme-ner.html).
+
+      `linkingMethod` is a configurable parameter that can be used to choose preferred entity linking method. Depending on dataset and the content you want to process, one linking might provide better results than other. While one approach could aim at higher recall, the other might target higher precision. So far, you can choose between following linking approaches:
 
       `numLinks` Using the numLinks parameter one can specify the maximum number of links to be assigned to an entity. By default only one link is returned. The maximum possible number for this parameter is 5.
 
@@ -43,10 +45,10 @@ module Agents
 
     def default_options
       {
-        'base_url' => 'http://api.freme-project.eu/0.6/',
+        'base_url' => 'http://api.freme-project.eu/current/',
         'body' => '{{ data }}',
         'body_format' => 'text/plain',
-        'outformat' => 'turtle',
+        'outformat' => 'text/turtle',
         'language' => 'en',
         'mode' => 'all',
         'numLinks' => '1'
@@ -57,13 +59,14 @@ module Agents
     form_configurable :auth_token
     form_configurable :body
     form_configurable :body_format, type: :array, values: ['text/plain', 'text/xml', 'text/html', 'text/n3', 'text/turtle', 'application/ld+json', 'application/n-triples', 'application/rdf+xml', 'application/x-xliff+xml', 'application/x-openoffice']
-    form_configurable :outformat, type: :array, values: ['turtle', 'json-ld', 'n3', 'n-triples', 'rdf-xml', 'text/html', 'text/xml', 'application/x-xliff+xml', 'application/x-openoffice', 'csv']
+    form_configurable :outformat, type: :array, values: ['application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml', 'application/x-xliff+xml', 'text/html']
     form_configurable :prefix
     form_configurable :language, type: :array, values: ['en','de','nl','fr','it','es','ru']
     form_configurable :dataset, roles: :completable
     form_configurable :mode, type: :array, values: ['all', 'spot', 'spot,classify', 'spot,link', 'spot,link,classify', 'link']
     form_configurable :domain
     form_configurable :types
+    form_configurable :linkingMethod, type: :array, values: ['MFS', 'SurfaceFormSimilarity1']
     form_configurable :numLinks
     filterable_field
 
@@ -87,7 +90,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat', 'prefix', 'language', 'dataset', 'mode', 'domain', 'types', 'numLinks'], URI.join(mo['base_url'], 'e-entity/freme-ner/documents'))
+        nif_request!(mo, ['outformat', 'prefix', 'language', 'dataset', 'mode', 'domain', 'types', 'numLinks', 'linkingMethod'], URI.join(mo['base_url'], 'e-entity/freme-ner/documents'))
       end
     end
   end

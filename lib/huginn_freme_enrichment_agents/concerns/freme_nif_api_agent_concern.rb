@@ -53,6 +53,10 @@ module FremeNifApiAgentConcern
     response = faraday.run_request(:post, url, mo['body'], headers) do |request|
       request.params.update(params)
     end
+    create_nif_event response
+  end
+
+  def create_nif_event(response)
     create_event payload: { body: response.body, headers: response.headers, status: response.status }
   end
 end
