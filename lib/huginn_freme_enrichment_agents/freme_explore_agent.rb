@@ -27,6 +27,8 @@ module Agents
       `endpoint_type` the type of the endpoint (required).
 
       #{filterable_description}
+
+      `merge` set to true to retain the received payload and update it with the extracted result
     MD
 
     def default_options
@@ -46,6 +48,7 @@ module Agents
     form_configurable :endpoint
     form_configurable :endpoint_type, type: :array, values: ['sparql', 'ldf']
     filterable_field
+    form_configurable :merge, type: :boolean
 
     def validate_options
       errors.add(:base, "base_url needs to be present") if options['base_url'].blank?
@@ -59,7 +62,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat', 'resource', 'endpoint', 'endpoint_type'], URI.join(mo['base_url'], 'e-link/explore'))
+        nif_request!(mo, ['outformat', 'resource', 'endpoint', 'endpoint_type'], URI.join(mo['base_url'], 'e-link/explore'), event: event)
       end
     end
   end

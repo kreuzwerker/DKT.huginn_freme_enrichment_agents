@@ -39,6 +39,8 @@ module Agents
       `key` A private key to access private and not publicly available translation systems. Key can be created by contacting [Tilde](http://www.tilde.com/mt/contacts) team. Optional, if omitted then translates with public systems
 
       #{filterable_description}
+
+      `merge` set to true to retain the received payload and update it with the extracted result
     MD
 
     def default_options
@@ -70,6 +72,7 @@ module Agents
     form_configurable :domain
     form_configurable :key
     filterable_field
+    form_configurable :merge, type: :boolean
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -82,7 +85,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat', 'prefix', 'source_lang', 'target_lang','collection', 'mode', 'domain', 'key',], URI.join(mo['base_url'], 'e-terminology/tilde'))
+        nif_request!(mo, ['outformat', 'prefix', 'source_lang', 'target_lang','collection', 'mode', 'domain', 'key',], URI.join(mo['base_url'], 'e-terminology/tilde'), event: event)
       end
     end
   end

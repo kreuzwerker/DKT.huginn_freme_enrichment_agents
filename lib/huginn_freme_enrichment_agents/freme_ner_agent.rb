@@ -41,6 +41,8 @@ module Agents
       `numLinks` Using the numLinks parameter one can specify the maximum number of links to be assigned to an entity. By default only one link is returned. The maximum possible number for this parameter is 5.
 
       #{filterable_description}
+
+      `merge` set to true to retain the received payload and update it with the extracted result
     MD
 
     def default_options
@@ -69,6 +71,7 @@ module Agents
     form_configurable :linkingMethod, type: :array, values: ['MFS', 'SurfaceFormSimilarity1']
     form_configurable :numLinks
     filterable_field
+    form_configurable :merge, type: :boolean
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -90,7 +93,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat', 'prefix', 'language', 'dataset', 'mode', 'domain', 'types', 'numLinks', 'linkingMethod'], URI.join(mo['base_url'], 'e-entity/freme-ner/documents'))
+        nif_request!(mo, ['outformat', 'prefix', 'language', 'dataset', 'mode', 'domain', 'types', 'numLinks', 'linkingMethod'], URI.join(mo['base_url'], 'e-entity/freme-ner/documents'), event: event)
       end
     end
   end

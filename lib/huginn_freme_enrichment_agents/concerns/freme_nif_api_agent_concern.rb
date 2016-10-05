@@ -38,7 +38,7 @@ module FremeNifApiAgentConcern
     { 'X-Auth-Token' => (mo || interpolated)['auth_token'] }
   end
 
-  def nif_request!(mo, configuration_keys, url)
+  def nif_request!(mo, configuration_keys, url, options = {})
     headers = auth_header(mo).merge({
       'Content-Type' => mo['body_format']
     })
@@ -53,10 +53,10 @@ module FremeNifApiAgentConcern
     response = faraday.run_request(:post, url, mo['body'], headers) do |request|
       request.params.update(params)
     end
-    create_nif_event response
+    create_nif_event response, (boolify(mo['merge']) ? options[:event].payload : {})
   end
 
-  def create_nif_event(response)
-    create_event payload: { body: response.body, headers: response.headers, status: response.status }
+  def create_nif_event(response, original_payload)
+    create_event payload: original_payload.merge(body: response.body, headers: response.headers, status: response.status)
   end
 end

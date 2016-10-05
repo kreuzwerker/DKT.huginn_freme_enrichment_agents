@@ -53,19 +53,32 @@ describe Agents::FremeNifConverterAgent do
       expect(event.payload['body']).to eq('DATA')
     end
 
-    it 'handles an incoming file pointer' do
-      stub_request(:post, "http://api.freme-project.eu/current/toolbox/nif-converter").
-        with(:body => "-------------RubyMultipartPost\r\nContent-Disposition: form-data; name=\"inputFile\"; filename=\"local.path\"\r\nContent-Length: 8\r\nContent-Type: \r\nContent-Transfer-Encoding: binary\r\n\r\ntestdata\r\n-------------RubyMultipartPost\r\nContent-Disposition: form-data; name=\"informat\"\r\n\r\nTIKAFile\r\n-------------RubyMultipartPost\r\nContent-Disposition: form-data; name=\"outformat\"\r\n\r\ntext/turtle\r\n-------------RubyMultipartPost--\r\n\r\n",
-             :headers => {'Accept-Encoding'=>'gzip,deflate', 'Content-Length'=>'413', 'Content-Type'=>'multipart/form-data; boundary=-----------RubyMultipartPost', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
-        to_return(:status => 200, :body => "DATA", :headers => {})
+    context 'handling incoming file pointers' do
+      let(:event) { Event.new(payload: {file_pointer: {agent_id: 111, file: 'test'}}) }
 
-      event = Event.new(payload: {file_pointer: {agent_id: 111, file: 'test'}})
-      io_mock = mock()
-      mock(@checker).get_io(event) { StringIO.new("testdata") }
+      before do
+        stub_request(:post, "http://api.freme-project.eu/current/toolbox/nif-converter").
+          with(:body => "-------------RubyMultipartPost\r\nContent-Disposition: form-data; name=\"inputFile\"; filename=\"local.path\"\r\nContent-Length: 8\r\nContent-Type: \r\nContent-Transfer-Encoding: binary\r\n\r\ntestdata\r\n-------------RubyMultipartPost\r\nContent-Disposition: form-data; name=\"informat\"\r\n\r\nTIKAFile\r\n-------------RubyMultipartPost\r\nContent-Disposition: form-data; name=\"outformat\"\r\n\r\ntext/turtle\r\n-------------RubyMultipartPost--\r\n\r\n",
+               :headers => {'Accept-Encoding'=>'gzip,deflate', 'Content-Length'=>'413', 'Content-Type'=>'multipart/form-data; boundary=-----------RubyMultipartPost', 'User-Agent'=>'Huginn - https://github.com/cantino/huginn'}).
+          to_return(:status => 200, :body => "DATA", :headers => {})
 
-      expect { @checker.receive([event]) }.to change(Event, :count).by(1)
-      event = Event.last
-      expect(event.payload['body']).to eq('DATA')
+        io_mock = mock()
+        mock(@checker).get_io(event) { StringIO.new("testdata") }
+      end
+
+      it 'does not merge per default' do
+        expect { @checker.receive([event]) }.to change(Event, :count).by(1)
+        event = Event.last
+        expect(event.payload['body']).to eq('DATA')
+        expect(event.payload[:file_pointer]).to be_nil
+      end
+
+      it 'merges the results with the received event when merge is set to true' do
+        @checker.options['merge'] = "true"
+        expect { @checker.receive([event]) }.to change(Event, :count).by(1)
+        event = Event.last
+        expect(event.payload[:file_pointer]).to eq({'agent_id' => 111, 'file' => 'test'})
+      end
     end
   end
 end

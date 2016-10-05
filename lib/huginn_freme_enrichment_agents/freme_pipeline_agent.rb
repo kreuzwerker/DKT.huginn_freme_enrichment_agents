@@ -26,6 +26,8 @@ module Agents
       `stats` If true, adds timing statistics to the response: total duration of the pipeline and duration of each service called in the pipeline (in milliseconds).
 
       `useI18n` If `false`, enforces to not use [e-Internalization](https://freme-project.github.io//knowledge-base/freme-for-api-users/eInternationalisation.html), even if Content-Type header is one of the possible e-Internalization formats. For any othe value, e-Internalization will be used, if possible.
+
+      `merge` set to true to retain the received payload and update it with the extracted result
     MD
 
     def default_options
@@ -44,6 +46,7 @@ module Agents
     form_configurable :body, type: :text, ace: true
     form_configurable :stats, type: :boolean
     form_configurable :useI18n, type: :boolean
+    form_configurable :merge, type: :boolean
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -63,10 +66,10 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
         if mo['template_id'].present?
-          nif_request!(mo, ['stats', 'useI18n'], URI.join(mo['base_url'], "pipelining/chain/#{mo['template_id']}"))
+          nif_request!(mo, ['stats', 'useI18n'], URI.join(mo['base_url'], "pipelining/chain/#{mo['template_id']}"), event: event)
         else
           mo['body_format'] = 'application/json'
-          nif_request!(mo, ['stats', 'useI18n'], URI.join(mo['base_url'], 'pipelining/chain'))
+          nif_request!(mo, ['stats', 'useI18n'], URI.join(mo['base_url'], 'pipelining/chain'), event: event)
         end
       end
     end
