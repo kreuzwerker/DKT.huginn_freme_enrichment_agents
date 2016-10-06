@@ -25,7 +25,7 @@ module Agents
 
         `body` use [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) templating to specify the data to be send to the API.
 
-        #{common_nif_agent_fields_description}
+        #{self.class.common_nif_agent_fields_description}
 
         **When receiving a file pointer:**
 
