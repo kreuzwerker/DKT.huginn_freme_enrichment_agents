@@ -29,6 +29,8 @@ module Agents
       `templateid` the ID of the template to be used for enrichment, [the official documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/e-Link/getAllTemplates) has a list of all available templates.
 
       #{filterable_description}
+
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -48,6 +50,7 @@ module Agents
     form_configurable :outformat, type: :array, values: ['application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml']
     form_configurable :templateid, roles: :completable
     filterable_field
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -68,7 +71,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat', 'templateid'], URI.join(mo['base_url'], 'e-link/documents'))
+        nif_request!(mo, ['outformat', 'templateid'], URI.join(mo['base_url'], 'e-link/documents'), event: event)
       end
     end
   end

@@ -24,6 +24,8 @@ module Agents
       `outformat` requested RDF serialization format of the output
 
       `name` name of filter to execute against, [the official documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/Toolbox/get_toolbox_convert_manage) has a list of all available filters.
+
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -42,6 +44,7 @@ module Agents
     form_configurable :body_format, type: :array, values: ['text/n3', 'text/turtle', 'application/ld+json', 'application/n-triples', 'application/rdf+xml']
     form_configurable :outformat, type: :array, values: ['text/comma-separated-values', 'text/xml', 'application/json', 'application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml']
     form_configurable :name, roles: :completable
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -62,7 +65,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat'], URI.join(mo['base_url'], 'toolbox/convert/documents/', mo['name']))
+        nif_request!(mo, ['outformat'], URI.join(mo['base_url'], 'toolbox/convert/documents/', mo['name']), event: event)
       end
     end
   end

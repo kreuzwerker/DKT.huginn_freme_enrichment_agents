@@ -25,6 +25,8 @@ module Agents
 
         `body` use [Liquid](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) templating to specify the data to be send to the API.
 
+        #{self.class.common_nif_agent_fields_description}
+
         **When receiving a file pointer:**
 
         `body` and `body_format` will be ignored and the received file will be converted using Apache Tika.
@@ -46,6 +48,7 @@ module Agents
     form_configurable :outformat, type: :array, values: ['text/n3', 'text/turtle', 'application/ld+json', 'application/n-triples', 'application/rdf+xml']
     form_configurable :body_format, type: :array, values: ['text/plain', 'text/xml', 'text/html', 'text/n3', 'text/turtle', 'application/ld+json', 'application/n-triples', 'application/rdf+xml', 'application/x-xliff+xml', 'application/x-openoffice']
     form_configurable :body, type: :text, ace: true
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -65,9 +68,9 @@ module Agents
 
           response = faraday.post(URI.join(mo['base_url'], 'toolbox/nif-converter'), mo.slice('inputFile', 'informat','outformat'), headers)
 
-          create_nif_event(response)
+          create_nif_event!(mo, event, body: response.body, headers: response.headers, status: response.status)
         else
-          nif_request!(mo, ['outformat'], URI.join(mo['base_url'], 'toolbox/nif-converter'))
+          nif_request!(mo, ['outformat'], URI.join(mo['base_url'], 'toolbox/nif-converter'), event: event)
         end
       end
     end

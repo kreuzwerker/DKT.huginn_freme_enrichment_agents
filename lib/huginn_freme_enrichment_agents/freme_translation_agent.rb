@@ -35,6 +35,8 @@ module Agents
       `system` select translation system by ID [an alternative to source, target language and domain selection]. ID of public translation system can be retrieved at [https://services.tilde.com/translationsystems](https://services.tilde.com/translationsystems) or private system ID can be found at portal [http://tilde.com/mt](http://tilde.com/mt) with authentication [optional, if omitted then source and target languages and also domain parameters are used]
 
       #{filterable_description}
+
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -62,6 +64,7 @@ module Agents
     form_configurable :domain
     form_configurable :system
     filterable_field
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -76,7 +79,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat', 'prefix', 'source_lang', 'target_lang', 'key', 'domain', 'system'], URI.join(mo['base_url'], 'e-terminology/tilde'))
+        nif_request!(mo, ['outformat', 'prefix', 'source_lang', 'target_lang', 'key', 'domain', 'system'], URI.join(mo['base_url'], 'e-terminology/tilde'), event: event)
       end
     end
   end

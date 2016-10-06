@@ -33,6 +33,8 @@ module Agents
       `confidence` Setting a high confidence threshold instructs DBpedia Spotlight to avoid incorrect annotations as much as possible at the risk of losing some correct ones. A confidence value of 0.7 will eliminate 70% of incorrectly disambiguated test cases. The range of the confidence parameter is between 0 and 1. Default is 0.3.
 
       #{filterable_description}
+
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -58,6 +60,7 @@ module Agents
     form_configurable :numLinks
     form_configurable :confidence
     filterable_field
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
@@ -71,7 +74,7 @@ module Agents
       incoming_events.each do |event|
         mo = interpolated(event)
 
-        nif_request!(mo, ['outformat', 'prefix', 'language', 'numLinks','confidence'], URI.join(mo['base_url'], 'e-entity/dbpedia-spotlight/documents'))
+        nif_request!(mo, ['outformat', 'prefix', 'language', 'numLinks','confidence'], URI.join(mo['base_url'], 'e-entity/dbpedia-spotlight/documents'), event: event)
       end
     end
   end
