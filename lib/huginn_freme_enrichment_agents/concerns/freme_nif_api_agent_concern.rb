@@ -27,6 +27,19 @@ module FremeNifApiAgentConcern
   end
 
   module ClassMethods
+    def common_nif_agent_fields
+      form_configurable :merge, type: :boolean
+      form_configurable :result_key
+    end
+
+    def common_nif_agent_fields_description
+      Utils.unindent <<-MD
+        `merge` set to `true` to retain the received payload and update it with the extracted result
+
+        `result_key` when present the emitted Event data will be nested inside the specified key
+      MD
+    end
+
     def freme_auth_token_description
       "`auth_token` can be set to access private filters, datasets, templates or pipelines (depending on the agent)."
     end
@@ -53,10 +66,14 @@ module FremeNifApiAgentConcern
     response = faraday.run_request(:post, url, mo['body'], headers) do |request|
       request.params.update(params)
     end
-    create_nif_event response, (boolify(mo['merge']) ? options[:event].payload : {})
+
+    create_nif_event!(mo, options[:event], body: response.body, headers: response.headers, status: response.status)
   end
 
-  def create_nif_event(response, original_payload)
-    create_event payload: original_payload.merge(body: response.body, headers: response.headers, status: response.status)
+  def create_nif_event!(mo, event, payload)
+    original_payload = boolify(mo['merge']) ? event.payload : {}
+    payload = {mo['result_key'] => payload} if mo['result_key'].present?
+
+    create_event payload: original_payload.merge(payload)
   end
 end

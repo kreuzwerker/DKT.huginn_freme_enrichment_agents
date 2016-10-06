@@ -27,7 +27,7 @@ module Agents
 
       `useI18n` If `false`, enforces to not use [e-Internalization](https://freme-project.github.io//knowledge-base/freme-for-api-users/eInternationalisation.html), even if Content-Type header is one of the possible e-Internalization formats. For any othe value, e-Internalization will be used, if possible.
 
-      `merge` set to true to retain the received payload and update it with the extracted result
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -46,7 +46,7 @@ module Agents
     form_configurable :body, type: :text, ace: true
     form_configurable :stats, type: :boolean
     form_configurable :useI18n, type: :boolean
-    form_configurable :merge, type: :boolean
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?

@@ -42,7 +42,7 @@ module Agents
 
       #{filterable_description}
 
-      `merge` set to true to retain the received payload and update it with the extracted result
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -71,7 +71,7 @@ module Agents
     form_configurable :linkingMethod, type: :array, values: ['MFS', 'SurfaceFormSimilarity1']
     form_configurable :numLinks
     filterable_field
-    form_configurable :merge, type: :boolean
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?

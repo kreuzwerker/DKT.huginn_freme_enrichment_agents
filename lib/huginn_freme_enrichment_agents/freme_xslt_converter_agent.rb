@@ -25,7 +25,7 @@ module Agents
 
       `name` name of filter to execute against, [the official documentation](https://freme-project.github.io/api-doc/full.html#!/Toolbox%2FXSLT-Converter/get_toolbox_xslt_converter_manage) has a list of all available filters.
 
-      `merge` set to true to retain the received payload and update it with the extracted result
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -44,7 +44,7 @@ module Agents
     form_configurable :outformat, type: :array, values: ['text/xml', 'text/html']
     form_configurable :name, roles: :completable
     form_configurable :body, type: :text
-    form_configurable :merge, type: :boolean
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?

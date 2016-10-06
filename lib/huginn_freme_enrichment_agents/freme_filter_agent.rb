@@ -25,7 +25,7 @@ module Agents
 
       `name` name of filter to execute against, [the official documentation](http://api.freme-project.eu/doc/current/api-doc/full.html#!/Toolbox/get_toolbox_convert_manage) has a list of all available filters.
 
-      `merge` set to true to retain the received payload and update it with the extracted result
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -44,7 +44,7 @@ module Agents
     form_configurable :body_format, type: :array, values: ['text/n3', 'text/turtle', 'application/ld+json', 'application/n-triples', 'application/rdf+xml']
     form_configurable :outformat, type: :array, values: ['text/comma-separated-values', 'text/xml', 'application/json', 'application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml']
     form_configurable :name, roles: :completable
-    form_configurable :merge, type: :boolean
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?

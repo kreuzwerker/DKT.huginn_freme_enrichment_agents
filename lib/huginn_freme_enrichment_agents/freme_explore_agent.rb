@@ -28,7 +28,7 @@ module Agents
 
       #{filterable_description}
 
-      `merge` set to true to retain the received payload and update it with the extracted result
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -48,7 +48,7 @@ module Agents
     form_configurable :endpoint
     form_configurable :endpoint_type, type: :array, values: ['sparql', 'ldf']
     filterable_field
-    form_configurable :merge, type: :boolean
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "base_url needs to be present") if options['base_url'].blank?

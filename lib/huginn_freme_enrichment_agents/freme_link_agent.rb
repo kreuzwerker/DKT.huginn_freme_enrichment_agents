@@ -30,7 +30,7 @@ module Agents
 
       #{filterable_description}
 
-      `merge` set to true to retain the received payload and update it with the extracted result
+      #{common_nif_agent_fields_description}
     MD
 
     def default_options
@@ -50,7 +50,7 @@ module Agents
     form_configurable :outformat, type: :array, values: ['application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml']
     form_configurable :templateid, roles: :completable
     filterable_field
-    form_configurable :merge, type: :boolean
+    common_nif_agent_fields
 
     def validate_options
       errors.add(:base, "body needs to be present") if options['body'].blank?
